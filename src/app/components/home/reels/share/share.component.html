@@ -1,0 +1,45 @@
+<div class="min-h-screen flex justify-center items-center">
+  <div
+    aria-labelledby="share-title"
+    aria-modal="true"
+    class="w-full max-w-full bg-white rounded-xl shadow-lg border border-gray-300 flex flex-col"
+    role="dialog"
+  >
+    <header
+      class="flex justify-between items-center border-b border-gray-300 px-4 py-2"
+    >
+      <h2
+        class="text-center text-lg font-semibold text-gray-900 flex-1"
+        id="share-title"
+      >
+        Share
+      </h2>
+      <button
+        aria-label="Close"
+        class="text-gray-600 hover:text-gray-900 focus:outline-none"
+        (click)="onClose()"
+      >
+        <i class="fas fa-times text-base"> </i>
+      </button>
+    </header>
+    <section class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <div
+        *ngFor="let user of followingUserList"
+        class="flex flex-col items-center border-b rounded-xl border-gray-400 p-5 w-full cursor-pointer"
+        (click)="sharePost(user.id)"
+      >
+        <!-- User Profile Image -->
+        <img
+          [src]="user.profilePic ? user.profilePic : defaultImage"
+          alt="User profile"
+          class="rounded-full object-cover w-[65%]"
+        />
+
+        <!-- User Information -->
+        <div class="flex-1 mt-4">
+          <h3 class="text-lg font-medium">{{ user.username }}</h3>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

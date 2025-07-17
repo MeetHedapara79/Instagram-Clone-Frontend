@@ -1,0 +1,59 @@
+<div class="flex justify-center items-center min-h-screen bg-gray-50">
+    <div class="w-full max-w-xs p-6 bg-white rounded-lg shadow-lg">
+        <img src="../../../assets/Instalogo.png" alt="Instagram Logo" class="mx-auto my-auto" />
+        <form [formGroup]="signinForm" (ngSubmit)="onSubmit()">
+            <div class="mb-4">
+                <input id="username" formControlName="username" type="text"
+                    class="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Phone number, username or email address" />
+                @if(signinForm.get('username')?.invalid && signinForm.get('username')?.touched){
+                    @if(signinForm.get('username')?.hasError('required')){
+                        <div class="text-red-500 text-xs mt-1">Username is required.</div>
+                    }
+                    @if(signinForm.get('username')?.hasError('invalidUsername')){
+                        <div class="text-red-500 text-xs mt-1">
+                            Please enter a valid username. 
+                        </div>
+                    }
+                }
+            </div>
+
+            <div class="mb-4 relative">
+                <input id="password" [type]="passwordVisible ? 'text' : 'password'" formControlName="password"
+                    class="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Password" />
+                <button type="button" class="absolute right-0 top-1/2 transform -translate-y-1/2"
+                    (click)="togglePasswordVisibility()" style="background: none; border: none; cursor: pointer">
+                    <i class="fa" [ngClass]="passwordVisible ? 'fa-eye' : 'fa-eye-slash'"></i>
+                </button>
+                @if(signinForm.get('password')?.invalid && signinForm.get('password')?.touched){
+                    @if(signinForm.get('password')?.hasError('required')){
+                        <div class="text-red-500 text-xs mt-1">Password is required.</div>
+                    }
+                }
+            </div>
+
+            <button type="submit"
+                class="w-full bg-blue-600 text-white mx-auto my-auto py-3 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                [disabled]="signinForm.invalid">
+                Log in
+            </button>
+        </form>
+
+        @if(errorMessage.length>0){
+            <div class="text-red-500 text-sm text-center mt-3">{{errorMessage}}</div>
+          }
+
+        <div class="text-center mt-4">
+            <a href="#" [routerLink]="['/forgotpassword']" routerLinkActive="router-link-active" class="text-sm text-blue-600 hover:underline">Forgotten your password?</a>
+        </div>
+
+        <div class="text-center mt-4">
+            <p class="text-sm text-gray-600">
+                Don't have an account?
+                <a href="#" [routerLink]="['/register']" routerLinkActive="router-link-active"
+                    class="text-blue-600 hover:underline">Sign up</a>
+            </p>
+        </div>
+    </div>
+</div>

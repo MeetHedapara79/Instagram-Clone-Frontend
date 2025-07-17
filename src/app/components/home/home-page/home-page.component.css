@@ -1,0 +1,9 @@
+/* Example of adding some custom styles if needed */
+button:hover {
+    transition: background-color 0.3s;
+  }
+  
+  button:focus {
+    outline: none;
+  }
+  

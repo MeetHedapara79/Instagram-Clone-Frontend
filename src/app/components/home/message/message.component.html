@@ -1,0 +1,163 @@
+<div class="flex h-[100vh] overflow-hidden">
+  <div class="w-1/3 border border-gray-300">
+    <header
+      class="flex items-center justify-between px-4 py-3 border-b border-gray-200"
+    >
+      <div class="flex items-center space-x-2">
+        <span class="font-semibold text-sm sm:text-base md:text-lg">
+          {{ authToken.username }}
+        </span>
+        <button aria-label="Edit" class="text-gray-600 hover:text-gray-900">
+          <i class="fas fa-pen"> </i>
+        </button>
+      </div>
+    </header>
+
+    <div
+      class="flex justify-between items-center px-4 py-2 border-t border-gray-200"
+    >
+      <span class="font-semibold text-sm"> Messages </span>
+    </div>
+    <!-- UserList -->
+    <ul class="overflow-y-auto no-scrollbar flex-grow bg-white">
+      <li
+        *ngFor="let user of followingUserList"
+        class="flex items-center space-x-3 px-4 py-3 bg-gray-100 cursor-pointer"
+        (click)="onSelect(user)"
+      >
+        <img
+          alt="User avatar placeholder, gray silhouette on light gray background"
+          class="w-10 h-10 rounded-full"
+          height="40"
+          [src]="user.profilePic ? user.profilePic : defaultImage"
+          width="40"
+        />
+        <div class="flex flex-col text-xs text-gray-500">
+          <span class="text-gray-900 text-sm font-normal">
+            {{ user.username }}
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div
+    *ngIf="selectedUserData.username.length > 0"
+    class="flex flex-col w-2/3 bg-white border border-gray-300 justify-center"
+  >
+    <!-- Header -->
+    <header
+      class="flex h-0.5/3 items-center space-x-3 px-6 py-4 border-b border-gray-300"
+    >
+      <img
+        alt="User avatar placeholder, gray silhouette on light gray background"
+        class="w-10 h-10 rounded-full"
+        height="40"
+        [src]="
+          selectedUserData.profilePic
+            ? selectedUserData.profilePic
+            : defaultImage
+        "
+        width="40"
+      />
+      <span class="font-semibold text-sm sm:text-base md:text-lg">
+        {{ selectedUserData.username }}
+      </span>
+      <button
+        aria-label="Info"
+        class="ml-auto text-gray-600 hover:text-gray-900"
+      >
+        <i class="fas fa-info-circle"> </i>
+      </button>
+    </header>
+    <!-- chat -->
+    <div
+      class="flex flex-col-reverse h-full space-y-1 px-6 py-3 overflow-scroll"
+    >
+      @for (message of this._messageService.messages().slice().reverse(); track
+      $index) {
+      <div
+        class="flex mt-3"
+        [class.justify-end]="message.senderId === authToken.id"
+        [class.justify-start]="message.senderId !== authToken.id"
+      >
+        @if(isValidURL(message.content)){
+        <div class="relative bg-black w-[25%]">
+          @if(videoExtention.includes((message.content).split('.').pop()!.split('?')[0])){
+          <video
+            alt="Reel"
+            class="rounded-t-md py-30 object-cover"
+            [src]="message.content"
+            muted
+            loop
+            playsinline
+          ></video>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div
+              class="text-gray-400 text-lg font-semibold flex items-center space-x-4"
+            >
+              <i
+                class="fa-solid fa-play fa-2xl cursor-pointer"
+                (click)="onShow(message)"
+              ></i>
+            </div>
+          </div>
+          } @else {
+          <img
+            [src]="message.content"
+            alt="Post"
+            class="w-full h-full object-cover cursor-pointer"
+            (click)="onShow(message)"
+          />
+          }
+        </div>
+        } @else{
+        <div
+          class="bg-blue-600 text-white text-sm rounded-full px-5 py-3 max-w-xs break-words"
+        >
+          {{ message.content }}
+        </div>
+        }
+        <div class="flex items-end text-xs">
+          <span>{{ message.timestamp | date : "shortTime" }}</span>
+        </div>
+      </div>
+      }
+    </div>
+
+    <!-- textAreaa -->
+
+    <form
+      [formGroup]="messageForm"
+      (ngSubmit)="onSubmit()"
+      class="h-0.5/3 border border-gray-200 px-4 py-3 flex space-x-3"
+    >
+      <button aria-label="Emoji" class="text-gray-400 hover:text-gray-600">
+        <i class="far fa-smile"> </i>
+      </button>
+      <input
+        id="content"
+        formControlName="content"
+        class="flex-grow border border-gray-500 rounded-full px-4 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
+        placeholder="Message..."
+        type="text"
+      />
+    </form>
+  </div>
+</div>
+
+<div
+  *ngIf="selectedPostIdForShow"
+  class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-5"
+  (click)="selectedPostIdForShow = null"
+>
+  <div
+    class="rounded-xl shadow-2xl p-4 h-full w-[40%] flex justify-center items-center"
+    (click)="$event.stopPropagation()"
+  >
+    <app-open-post
+      [post]="selectedPostIdForShow"
+      (close)="selectedPostIdForShow = null"
+    ></app-open-post>
+  </div>
+</div>
+

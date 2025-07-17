@@ -1,0 +1,182 @@
+<div class="bg-gray-100 min-h-screen w-[100%] flex items-center justify-center">
+  <div
+    class="bg-white rounded-lg max-w-full mx-4 p-6 flex flex-col items-center"
+  >
+    <span class="font-semibold text-4xl select-none mb-4">Create new post</span>
+    <div
+      class="flex flex-col items-center justify-center w-full py-5 px-5 bg-gray-300 rounded-lg border-2 border-dashed border-gray-400 hover:border-gray-600 transition duration-200 ease-in-out"
+      (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave()"
+      (drop)="onDrop($event)"
+      (click)="!previewUrl && fileInput.nativeElement.click()"
+      [class.border-dashed]="dragging && !previewUrl"
+      [class.border]="true"
+    >
+      <div class="flex flex-row items-center justify-center w-full h-full">
+        <div
+          [ngClass]="{
+            'w-2/3': showSidePanel,
+            'w-[500px]': !showSidePanel,
+            'h-full': showSidePanel,
+            'h-[500px]': !showSidePanel
+          }"
+          class="flex flex-col items-center justify-center"
+        >
+          <ng-container *ngIf="!previewUrl; else previewBlock">
+            <div class="text-center mb-4">
+              <svg
+                aria-hidden="true"
+                class="mx-auto mb-2"
+                width="48"
+                height="48"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                viewBox="0 0 24 24"
+              >
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <polyline points="21 15 16 10 5 21"></polyline>
+              </svg>
+            </div>
+            <p class="text-xl text-center mb-4 select-none">
+              Drag photos and videos here
+            </p>
+            <button
+              type="button"
+              class="bg-blue-500 hover:bg-blue-600 text-white text-lg font-semibold rounded px-3 py-1 select-none"
+              (click)="fileInput.click(); $event.stopPropagation()"
+            >
+              Select From Computer
+            </button>
+            <input
+              data-testid="file-input"
+              type="file"
+              #fileInput
+              (change)="onFileSelected($event)"
+              class="hidden"
+              accept="image/*, video/*"
+            />
+          </ng-container>
+
+          <ng-template #previewBlock>
+            <div class="relative w-full flex justify-center">
+              <div class="relative" (click)="onMediaClick($event)">
+                <img
+                  data-testid="media-preview"
+                  *ngIf="isImage"
+                  [src]="previewUrl"
+                  #mediaElement
+                  class="max-w-full rounded"
+                />
+                <video
+                  *ngIf="isVideo"
+                  [src]="previewUrl"
+                  #mediaElement
+                  controls
+                  class="max-w-full rounded"
+                ></video>
+                <form [formGroup]="tagForm">
+                  <div
+                    *ngIf="textboxPosition && showSidePanel"
+                    class="absolute z-50"
+                    [style.left.px]="textboxPosition.x"
+                    [style.top.px]="textboxPosition.y"
+                  >
+                    <div class="relative w-full">
+                      <input
+                        formControlName="clickText"
+                        class="w-full border border-gray-400 bg-white px-2 py-1 rounded shadow"
+                        (click)="$event.stopPropagation()"
+                      />
+
+                      <div
+                        *ngIf="tagResults.length > 0"
+                        class="absolute top-full left-0 bg-white border border-gray-300 shadow-md rounded mt-1 z-50 w-full overflow-y-auto"
+                      >
+                        <ul>
+                          <li
+                            *ngFor="let user of tagResults"
+                            class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+                            (click)="addTag(user.id)"
+                          >
+                            {{ user.username }}
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <div class="flex justify-between w-full mt-2">
+              <button
+                class="bg-gray-400 cursor-pointer hover:bg-gray-500 text-gray-800 font-semibold py-2 px-4 rounded"
+                (click)="cancel()"
+              >
+                Cancel
+              </button>
+              <button
+                [attr.data-testid]="
+                  showSidePanel ? 'share-create-model' : 'next-create-model'
+                "
+                class="bg-blue-500 hover:bg-blue-600 text-white cursor-pointer font-semibold py-2 px-4 rounded"
+                (click)="showSidePanel ? onSubmit() : next()"
+              >
+                {{ showSidePanel ? "Share" : "Next" }}
+              </button>
+            </div>
+          </ng-template>
+        </div>
+        @if(showSidePanel){
+        <div class="flex flex-col p-3 ml-3 w-1/2 h-[640px] bg-white">
+          <div class="flex items-center space-x-2 mb-3">
+            <img
+              alt="User avatar profile picture"
+              class="rounded-full w-8 h-8"
+              height="32"
+              src="../../../../assets/admin.jpeg"
+              width="32"
+            />
+            <span class="text-lg font-bold text-gray-900 select-text">
+              {{ authToken.username }}
+            </span>
+          </div>
+          <form [formGroup]="postForm">
+            <textarea
+              formControlName="caption"
+              id="caption"
+              class="w-full resize-none border border-gray-400 rounded-md p-2 text-lg text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-600"
+              placeholder="Write a caption..."
+              rows="3"
+              cols="35"
+            ></textarea>
+
+            <div
+              class="mt-4 border-t flex items-center justify-between w-full border-gray-300 pt-3 space-y-3 text-lg text-gray-700"
+            >
+              <input
+                formControlName="location"
+                id="location"
+                type="text"
+                class="w-full resize-none border border-gray-400 rounded-md p-2 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-600"
+                placeholder="Add Location"
+              />
+              <i class="fas fa-map-marker-alt text-gray-500 pl-2"> </i>
+            </div>
+          </form>
+        </div>
+        }
+      </div>
+    </div>
+    <h1
+      *ngIf="errorMessage.length > 0"
+      class="text-2xl font-semibold mb-6 text-red-500"
+    >
+      {{ this.errorMessage }}
+    </h1>
+  </div>
+</div>

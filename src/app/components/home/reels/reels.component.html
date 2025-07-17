@@ -1,0 +1,134 @@
+<div class="flex justify-center">
+  <h1 class="text-2xl font-semibold mb-6" *ngIf="reels.length == 0">
+    Reels are not available right now
+  </h1>
+  <div class="flex flex-col space-y-6">
+    <!-- Reel card -->
+    <article
+      *ngFor="let reel of reels"
+      class="flex rounded-md items-end shadow-lg px-40 mx-40"
+    >
+      <div class="flex flex-col w-4/5 bg-black">
+        <div class="relative">
+          <video
+            alt="Reel"
+            class="rounded-t-md py-40 object-cover"
+            [src]="reel.content"
+            autoplay
+            muted
+            loop
+            playsinline
+          ></video>
+          <button
+            aria-label="Mute video"
+            class="absolute top-2 right-2 bg-black bg-opacity-60 rounded-full p-1 text-white text-xs"
+          >
+            <i class="fas fa-volume-mute"> </i>
+          </button>
+        </div>
+        <div class="px-3 py-2 text-gray-300 text-lg space-y-1">
+          <div class="flex items-center space-x-2">
+            <img
+              alt="Profile Image"
+              class="rounded-full w-[7%]"
+              [src]="reel.user.profilePic ? reel.user.profilePic : defaultImage"
+            />
+            <span class="font-semibold"> {{ reel.user.username }} </span>
+          </div>
+          <p class="truncate max-w-[320px]">{{ reel.caption }}</p>
+        </div>
+      </div>
+      <div
+        class="flex flex-col w-1/5 justify-start items-center space-y-4 text-gray-400 text-sm"
+      >
+        <button
+          (click)="onLike(reel)"
+          class="cursor-pointer text-2xl space-x-1 text-red-500 hover:text-red-600"
+        >
+          @if(likeListData.includes(reel.id)){
+          <i class="fas fa-heart text-red-600"></i>
+          } @else {
+          <i class="fas fa-heart text-gray-700"></i>
+          }
+        </button>
+        <span
+          (click)="showLikes(reel.id)"
+          class="mt-0 text-red-600 text-sm cursor-pointer"
+        >
+          {{ reel.likes }}
+        </span>
+        <button
+          class="flex flex-col text-2xl text-gray-700 items-center space-y-1 cursor-pointer"
+          (click)="onComment(reel.id)"
+        >
+          <i class="far fa-comment"> </i>
+        </button>
+        <button
+          class="flex flex-col text-2xl text-gray-700 items-center space-y-1 cursor-pointer"
+          (click)="onShare(reel)"
+        >
+          <i class="fa-solid fa-square-up-right"></i>
+        </button>
+
+        <img
+          alt="Profile Image"
+          class="rounded-full w-[14%]"
+          [src]="reel.user.profilePic ? reel.user.profilePic : defaultImage"
+        />
+      </div>
+    </article>
+  </div>
+</div>
+
+<div
+  *ngIf="selectedPostIdForLikes"
+  class="fixed inset-0 bg-black flex items-center justify-center z-50"
+  (click)="selectedPostIdForLikes = null"
+>
+  <!-- Modal Content -->
+  <div
+    class="rounded-lg shadow-lg p-6 w-[400px] max-w-full relative"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Likes Component -->
+    <app-likes
+      [postId]="selectedPostIdForLikes"
+      (close)="selectedPostIdForLikes = null"
+    ></app-likes>
+  </div>
+</div>
+
+<div
+  *ngIf="selectedPostIdForComments"
+  class="fixed inset-0 bg-black flex items-center justify-center z-50"
+  (click)="selectedPostIdForComments = null"
+>
+  <!-- Modal Content -->
+  <div
+    class="rounded-lg shadow-lg p-6 w-auto max-w-full relative"
+    (click)="$event.stopPropagation()"
+  >
+    <app-comment
+      [postId]="selectedPostIdForComments"
+      (close)="selectedPostIdForComments = null"
+    ></app-comment>
+  </div>
+</div>
+
+<div
+  *ngIf="selectedPostIdForShare"
+  class="fixed inset-0 bg-black flex items-center justify-center z-50"
+  (click)="selectedPostIdForShare = null"
+>
+  <!-- Modal Content -->
+  <div
+    class="rounded-lg shadow-lg p-6 w-[900px] max-w-full relative"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Share Component -->
+    <app-share
+      [reel]="selectedPostIdForShare"
+      (close)="selectedPostIdForShare = null"
+    ></app-share>
+  </div>
+</div>

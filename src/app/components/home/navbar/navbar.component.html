@@ -1,0 +1,73 @@
+<nav
+  class="w-56 border-r border-gray-200 flex flex-col px-6 py-8 text-xl select-none"
+>
+  <div class="mb-8">
+    <img
+      src="../../../assets/Instalogo.png"
+      alt="Instagram Logo"
+      class="mx-auto my-auto"
+    />
+  </div>
+  <ul class="space-y-5 flex flex-col">
+    <li
+      class="flex items-center space-x-3 cursor-pointer hover:bg-gray-100 rounded px-4 py-3"
+      (click)="navigateAndCloseDrawer('/home/homePage')"
+    >
+      <i class="fas fa-home text-lg"> </i>
+      <span [routerLink]="['/home/homePage']"> Home </span>
+    </li>
+    <li
+      class="flex items-center space-x-3 cursor-pointer hover:bg-gray-100 rounded px-4 py-3"
+      (click)="toggleSearchDrawer($event)"
+    >
+      <i class="fas fa-search text-lg"></i>
+      <span> Search </span>
+    </li>
+    <li
+      class="flex items-center space-x-3 cursor-pointer hover:bg-gray-100 rounded px-4 py-3"
+      (click)="navigateAndCloseDrawer('/home/reels')"
+    >
+      <i class="fas fa-film text-lg"> </i>
+      <span [routerLink]="['/home/reels']"> Reels </span>
+    </li>
+    <li
+      class="flex items-center space-x-3 cursor-pointer hover:bg-gray-100 rounded px-4 py-3"
+      (click)="navigateAndCloseDrawer('/home/message')"
+    >
+      <i class="fas fa-paper-plane text-lg"> </i>
+      <span [routerLink]="['/home/message']"> Messages </span>
+    </li>
+    <li
+      class="flex items-center space-x-3 cursor-pointer hover:bg-gray-100 rounded px-4 py-3"
+      (click)="navigateAndCloseDrawer('/home/notification')"
+    >
+      <i class="far fa-heart text-lg"> </i>
+      <span [routerLink]="['/home/notification']"> Notifications </span>
+    </li>
+    <li
+      class="flex items-center space-x-3 cursor-pointer hover:bg-gray-100 rounded px-4 py-3"
+      (click)="navigateAndCloseDrawer('/home/create')"
+    >
+      <i class="fas fa-plus-circle text-lg"> </i>
+      <span [routerLink]="['/home/create']"> Create </span>
+    </li>
+    <li
+      class="flex items-center space-x-3 cursor-pointer hover:bg-gray-100 rounded px-4 py-3"
+      (click)="navigateAndCloseDrawer('/home/profile')"
+    >
+      <i class="far fa-user-circle text-lg"> </i>
+      <span [routerLink]="['/home/profile']"> Profile </span>
+    </li>
+    <li
+      class="flex items-center space-x-3 cursor-pointer hover:bg-gray-100 rounded px-4 py-3"
+    >
+      <i
+        class="fa-regular fa-right-from-bracket fa-rotate-180 fa-xl"
+        style="color: #050505"
+      ></i>
+      <span [routerLink]="['/']" (click)="onLogout()"> Log Out </span>
+    </li>
+  </ul>
+</nav>
+
+<app-search data-testid="search-drawer" *ngIf="showSearch" (close)="closeSearchDrawer()"></app-search>

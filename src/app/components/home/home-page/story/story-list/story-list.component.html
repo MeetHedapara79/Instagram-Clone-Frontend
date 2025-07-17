@@ -1,0 +1,108 @@
+<div
+  *ngIf="isSliderVisible"
+  class="relative w-full max-w-lg mx-auto overflow-hidden"
+>
+  <!-- Progress Bar Timeline -->
+  <div class="absolute top-0 left-0 w-full flex px-4 pt-2 z-10 space-x-1 mb-5">
+    <div
+      *ngFor="let s of stories; let i = index"
+      class="h-1 flex-1 bg-gray-300 rounded overflow-hidden"
+    >
+      <div
+        class="h-full bg-blue-500 transition-all duration-75"
+        [ngStyle]="{
+          width:
+            currentIndex > i
+              ? '100%'
+              : currentIndex === i
+              ? progressBar + '%'
+              : '0%'
+        }"
+      ></div>
+    </div>
+  </div>
+  <!-- Slider Content -->
+  <div
+    class="flex transition-transform duration-700 ease-in-out"
+    [ngStyle]="{ transform: 'translateX(-' + currentIndex * 100 + '%)' }"
+  >
+    <div
+      *ngFor="let story of stories"
+      class="w-full flex-shrink-0 bg-white rounded-md shadow-md h-full"
+    >
+      <div class="px-3 py-2 text-gray-800 text-lg space-y-1">
+        <div class="flex items-center space-x-2">
+          <img
+            alt="Profile Image"
+            class="border-2 rounded-full w-[20%] border-gray-200"
+            [src]="story.user.profilePic ? story.user.profilePic : defaultImage"
+          />
+          <span class="font-semibold text-md"> {{ story.user.username }} </span>
+        </div>
+      </div>
+
+      <div>
+        @if((story.mediaUrl) &&
+          videoExtention.includes((story.mediaUrl).split('.').pop()!.split('?')[0])){
+          <video
+            class="rounded-md object-cover py-40"
+            [src]="story.mediaUrl"
+            autoplay
+            playsinline
+          ></video>
+          }
+          @else {
+
+            <img
+            [src]="story.mediaUrl"
+            alt="Story Media"
+            class="w-full h-full object-cover rounded-t-md py-20"
+            />
+          }
+          </div>
+      <div class="p-4 absolute bottom-0 w-full bg-white bg-opacity-70">
+        <p class="text-sm text-gray-600">{{ story.caption }}</p>
+        <button
+          data-testid="viewerList"
+          *ngIf="story.userId == userId"
+          (click)="viewStory(story.id)"
+          class="mt-2 w-full p-2 text-black rounded-md cursor-pointer"
+        >
+          <i class="fa-solid fa-eye fa-2xl"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Buttons -->
+  <button
+    (click)="prevSlide()"
+    class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-gray-300/50 hover:bg-gray-300 rounded-full p-2"
+  >
+    <i class="fa-solid fa-circle-chevron-right fa-rotate-180 fa-2xl"></i>
+  </button>
+  <button
+    (click)="nextSlide()"
+    class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gray-300/50 hover:bg-gray-300 rounded-full p-2"
+  >
+    <i class="fa-solid fa-circle-chevron-right fa-2xl"></i>
+  </button>
+</div>
+
+<div
+  *ngIf="selectedPostIdForViews"
+  class="fixed inset-0 bg-black flex items-center justify-center z-50"
+  (click)="selectedPostIdForViews = null"
+>
+  <!-- Modal Content -->
+  <div
+    class="rounded-lg shadow-lg p-6 w-[400px] max-w-full relative"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- View Component -->
+    <app-story-view-list
+      [storyId]="selectedPostIdForViews"
+      (close)="handleViewModalClose()"
+    ></app-story-view-list>
+  </div>
+</div>

@@ -1,0 +1,37 @@
+<div
+  class="fixed top-0 left-56 h-full w-[30%] border border-gray-300 bg-white shadow-lg z-50 transition-transform duration-300 ease-in-out"
+  [ngClass]="{ 'translate-x-0': isOpen, '-translate-x-full': !isOpen }"
+>
+  <div class="p-4 border-b border-gray-300 flex justify-between items-center">
+    <h2 data-testid="search-name" class="text-lg font-semibold">Search</h2>
+    <button (click)="closeDrawer()" class="text-gray-600 text-xl">
+      &times;
+    </button>
+  </div>
+
+  <form [formGroup]="searchForm" class="p-4">
+    <input
+      type="text"
+      formControlName="query"
+      placeholder="Search..."
+      class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring"
+    />
+  </form>
+
+  <div *ngIf="searchResults.length > 0" class="p-4">
+    <ul>
+      <li
+        *ngFor="let user of searchResults"
+        class="flex items-center space-x-3 py-2 border-b"
+        (click)="navigateToUserProfile(user.id)"
+      >
+        <img
+          [src]="user.profilePic ? user.profilePic : defaultImage"
+          alt="Profile Pic"
+          class="w-10 h-10 rounded-full"
+        />
+        <span class="text-lg">{{ user.username }}</span>
+      </li>
+    </ul>
+  </div>
+</div>

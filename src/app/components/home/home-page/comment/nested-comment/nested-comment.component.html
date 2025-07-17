@@ -1,0 +1,37 @@
+<div class="ml-2 mt-2">
+    <div class="flex items-start space-x-2">
+      <img
+        [src]="comment.user.profilePic || defaultImage"
+        class="rounded-full w-6 h-6 object-cover"
+        alt="User"
+      />
+      <div>
+        <span class="font-semibold text-gray-900 text-sm">
+          {{ comment.user.username }}
+        </span>
+        <p class="text-sm text-gray-800">{{ comment.content }}</p>
+        <button (click)="onReplyClick()" class="text-xs text-blue-500 mt-1 cursor-pointer">
+          Reply
+        </button>
+      </div>
+    </div>
+  
+    <div *ngIf="comment.replies?.length" class="ml-4 border-l border-gray-300 pl-4 mt-2">
+      <button
+        (click)="toggleReplies()"
+        class="text-xs text-blue-500 mt-1 cursor-pointer"
+      >
+        {{ showReplies ? 'Hide Replies' : 'Show Replies' }}
+      </button>
+  
+      <div *ngIf="showReplies">
+        <app-nested-comment
+          *ngFor="let child of comment.replies"
+          [comment]="child"
+          [defaultImage]="defaultImage"
+          (replyClicked)="replyClicked.emit($event)"
+        ></app-nested-comment>
+      </div>
+    </div>
+  </div>
+  

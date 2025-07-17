@@ -1,0 +1,35 @@
+<section class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+  <div
+    *ngFor="let post of tagedPosts"
+    class="w-full aspect-square relative group overflow-hidden cursor-pointer"
+  >
+    @if((post.post.content) &&
+    videoExtention.includes((post.post.content).split('.').pop()!.split('?')[0])){
+    <video
+      [src]="post.post.content"
+      class="w-full h-full object-cover"
+      autoplay
+      muted
+      loop
+      playsinline
+    ></video>
+    } @else{
+    <img
+      [src]="post.post.content"
+      alt="Post"
+      class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+    />
+    }
+
+    <!-- Hover overlay -->
+    <div
+      class="absolute inset-0 bg-black bg-opacity-40 flex flex-col items-center justify-center opacity-0 group-hover:opacity-80 transition-opacity"
+    >
+      <div class="text-white text-lg font-semibold flex items-center space-x-4">
+        <span><i class="fas fa-heart mr-1"></i> {{ post.post.likes }}</span>
+        <span><i class="fas fa-comment mr-1"></i></span>
+      </div>
+      <div class="text-white text-lg font-semibold">{{post.post.user.username}}</div>
+    </div>
+  </div>
+</section>

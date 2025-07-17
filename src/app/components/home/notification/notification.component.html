@@ -1,0 +1,33 @@
+<div class="w-full max-w-7xl mx-auto px-4 py-8">
+  @if(suggestedUsers.length == 0){
+    <h2 class="text-2xl font-semibold mb-6">When someone following you, you'll see it here.</h2>
+  } @else {
+    <h2 class="text-2xl font-semibold mb-6">Notification List</h2>
+  }
+
+  <div
+    *ngFor="let user of suggestedUsers"
+    class="flex items-center space-x-4 border-b py-4"
+  >
+    <!-- User Profile Image -->
+    <img
+      [src]="user.profilePic ? user.profilePic : defaultImage"
+      alt="User profile"
+      class="w-12 h-12 rounded-full object-cover"
+    />
+
+    <!-- User Information -->
+    <div class="flex-1">
+      <h3 class="text-lg font-medium">{{ user.username }}</h3>
+    </div>
+
+    <!-- Follow Button -->
+
+    <button
+      (click)="onConfirm(user.id)"
+      class="px-4 py-2 bg-blue-500 text-white cursor-pointer rounded-full hover:bg-blue-600 focus:outline-none"
+    >
+      Confirm
+    </button>
+  </div>
+</div>

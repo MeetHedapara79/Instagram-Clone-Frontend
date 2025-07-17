@@ -1,0 +1,145 @@
+<div class="w-full max-w-7xl mx-auto px-4 py-8">
+  <section
+    class="flex flex-col md:flex-row items-center md:items-start space-x-0 md:space-x-16 mb-8 w-full"
+  >
+    <div class="relative">
+      <!-- Hidden file input -->
+      <input
+        *ngIf="isOwnProfile"
+        type="file"
+        #fileInput
+        accept="image/*"
+        (change)="onFileSelected($event)"
+        class="hidden"
+      />
+
+      <img
+        [src]="
+          userData.profilePic
+            ? userData.profilePic + '?t=' + timestamp
+            : defaultImage
+        "
+        alt="Profile icon"
+        class="rounded-full w-36 h-36 object-cover cursor-pointer hover:opacity-80 transition"
+        [class.cursor-pointer]="isOwnProfile"
+        [class.hover\:opacity-80]="isOwnProfile"
+        (click)="isOwnProfile && onProfileImageClick()"
+      />
+    </div>
+
+    <div>
+      <div class="flex items-center space-x-3 mb-4">
+        <h2 class="text-3xl font-semibold select-text">
+          {{ userData.username }}
+        </h2>
+        <button
+          *ngIf="isOwnProfile"
+          class="text-xl font-semibold bg-gray-200 rounded px-4 py-2 hover:bg-gray-300"
+        >
+          Edit Profile
+        </button>
+      </div>
+      <div class="flex space-x-8 text-sm text-gray-600 font-normal select-text">
+        <span class="text-xl"
+          ><span class="font-semibold text-gray-800">{{ posts.length }}</span>
+          posts</span
+        >
+        <span
+          class="text-xl cursor-pointer"
+          (click)="onFollowers(authToken.id, 1)"
+          ><span class="font-semibold text-gray-800">{{
+            follower.length
+          }}</span>
+          followers</span
+        >
+        <span
+          class="text-xl cursor-pointer"
+          (click)="onFollowing(authToken.id, 0)"
+          ><span class="font-semibold text-gray-800">{{
+            following.length
+          }}</span>
+          following</span
+        >
+      </div>
+    </div>
+  </section>
+
+  <!-- Restored Tabs Section -->
+  <section class="border-b border-gray-200 my-8">
+    <ul class="flex space-x-8 text-sm font-semibold text-gray-500 select-none">
+      <li
+        class="flex items-center cursor-pointer hover:text-black text-xl"
+        [routerLink]="['/home/profile']"
+      >
+        <i class="fas fa-th-large text-xl mr-3"></i> POSTS
+      </li>
+     
+      <li
+        class="flex items-center cursor-pointer hover:text-black text-xl"
+        [routerLink]="['/home/profile/tag']"
+      >
+        <i class="far fa-user-tag mr-3 text-xl"></i> TAGGED
+      </li>
+    </ul>
+  </section>
+
+  <!-- Instagram-like Post Grid -->
+  <ng-container *ngIf="!isTagRoute">
+    <section class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <div
+        *ngFor="let post of posts"
+        class="w-full aspect-square relative group overflow-hidden cursor-pointer"
+      >
+        @if((post.content) &&
+        videoExtention.includes((post.content).split('.').pop()!.split('?')[0])){
+        <video
+          [src]="post.content"
+          class="w-full h-full object-cover"
+          autoplay
+          muted
+          loop
+          playsinline
+        ></video>
+        } @else{
+        <img
+          [src]="post.content"
+          alt="Post"
+          class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+        />
+        }
+
+        <!-- Hover overlay -->
+        <div
+          class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-80 transition-opacity"
+        >
+          <div
+            class="text-white text-lg font-semibold flex items-center space-x-4"
+          >
+            <span><i class="fas fa-heart mr-1"></i> {{ post.likes }}</span>
+            <span><i class="fas fa-comment mr-1"></i> {{ post.comments }}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </ng-container>
+  <router-outlet></router-outlet>
+</div>
+
+<div
+  *ngIf="followingFollowerId"
+  class="fixed inset-0 bg-black flex items-center justify-center z-50"
+  (click)="followingFollowerId = null"
+>
+  <!-- Modal Content -->
+  <div
+    class="rounded-lg shadow-lg p-6 w-[30%] max-w-full relative"
+    (click)="$event.stopPropagation()"
+  >
+    <app-following-follower-list
+      data-testid="following-follower-list"
+      [followingFollowerId]="followingFollowerId"
+      [listType]="listType"
+      (close)="followingFollowerId = null"
+    ></app-following-follower-list>
+  </div>
+</div>

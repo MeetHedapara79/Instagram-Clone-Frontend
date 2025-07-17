@@ -1,0 +1,143 @@
+<div class="flex justify-center items-center min-h-screen bg-gray-50">
+  <div class="w-full max-w-xs p-6 bg-white rounded-lg shadow-lg">
+    <img
+      src="../../../assets/Instalogo.png"
+      alt="Instagram Logo"
+      class="mx-auto my-auto"
+    />
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="mb-4">
+        <input
+          data-testId="emailphone"
+          id="emailphone"
+          formControlName="emailphone"
+          type="text"
+          class="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Phone number or email address"
+        />
+        @if(registerForm.get('emailphone')?.invalid &&
+        registerForm.get('emailphone')?.touched){
+        @if(registerForm.get('emailphone')?.hasError('required')){
+        <div class="text-red-500 text-xs mt-1">
+          Email or Phone number is required.
+        </div>
+        } @if(registerForm.get('emailphone')?.hasError('invalidEmailPhone')){
+        <div class="text-red-500 text-xs mt-1">
+          Please enter a valid email or phone number.
+        </div>
+        } }
+      </div>
+
+      <div class="mb-4 relative">
+        <input
+          id="password"
+          [type]="passwordVisible ? 'text' : 'password'"
+          formControlName="password"
+          class="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Password"
+        />
+        <button
+          type="button"
+          class="absolute right-0 top-1/2 transform -translate-y-1/2"
+          (click)="togglePasswordVisibility()"
+          style="background: none; border: none; cursor: pointer"
+        >
+          <i
+            class="fa"
+            [ngClass]="passwordVisible ? 'fa-eye' : 'fa-eye-slash'"
+          ></i>
+        </button>
+        @if(registerForm.get('password')?.invalid &&
+        registerForm.get('password')?.touched){
+        @if(registerForm.get('password')?.hasError('required')){
+        <div class="text-red-500 text-xs mt-1">Password is required.</div>
+        } @if(registerForm.get('password')?.hasError('minlength')){
+        <div class="text-red-500 text-xs mt-1">
+          Password must be at least 6 characters long.
+        </div>
+        } }
+      </div>
+
+      <div class="mb-4">
+        <input
+          id="username"
+          formControlName="username"
+          type="text"
+          class="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Username"
+        />
+        @if(registerForm.get('username')?.invalid &&
+        registerForm.get('username')?.touched){
+        @if(registerForm.get('username')?.hasError('required')){
+        <div class="text-red-500 text-xs mt-1">Username is required.</div>
+        } @if(registerForm.get('username')?.hasError('invalidUsername')){
+        <div class="text-red-500 text-xs mt-1">
+          Please enter a valid username.
+        </div>
+        } }
+      </div>
+
+      <button
+        data-testId="signUpBtn"
+        type="submit"
+        class="w-full bg-blue-600 text-white mx-auto my-auto py-3 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        [disabled]="registerForm.invalid"
+      >
+        Sign Up
+      </button>
+      @if(errorMessage.length>0){
+      <div class="text-red-500 text-sm text-center mt-3">
+        {{ errorMessage }}
+      </div>
+      }
+    </form>
+
+    <div class="text-center mt-4">
+      <p class="text-sm text-gray-600">
+        Have an account?
+        <a
+          href="#"
+          [routerLink]="['/']"
+          routerLinkActive="router-link-active"
+          class="text-blue-600 hover:underline"
+          >Log In</a
+        >
+      </p>
+    </div>
+  </div>
+</div>
+
+<div
+  *ngIf="showRecoveryModal"
+  class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50"
+>
+  <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm text-center">
+    <h2 class="text-lg font-semibold mb-2">Recovery Code</h2>
+
+    <p class="mb-3 text-gray-700 break-words">
+      <strong>{{ recoveryCode }}</strong>
+    </p>
+
+    <p class="mb-4 text-sm text-gray-600">
+      Please save this code. You’ll need it if you forget your password.
+    </p>
+
+    <button
+      (click)="downloadRecoveryCode()"
+      class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+    >
+      Download Code
+    </button>
+
+    <div class="mt-4">
+      <p class="text-sm mb-2">Have you downloaded and saved the code?</p>
+      <button
+        (click)="goToLogin()"
+        [disabled]="!codeDownloaded"
+        class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50"
+      >
+        Yes, Continue to Login
+      </button>
+    </div>
+  </div>
+</div>

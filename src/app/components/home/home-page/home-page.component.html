@@ -1,0 +1,268 @@
+<div class="flex">
+  <div class="w-3/5 px-56 ml-20">
+    <!-- Stories Bar -->
+    <div
+      class="flex overflow-x-auto space-x-4 py-4 px-6 border-b border-gray-300 bg-white"
+    >
+      <!-- Create Story (User's Own) -->
+      <div
+        class="flex flex-col items-center cursor-pointer"
+        (click)="openCreateStoryModal()"
+        data-testid="create-story"
+      >
+        <div
+          class="w-16 h-16 rounded-full border-2 border-blue-500 flex items-center justify-center overflow-hidden"
+        >
+          <img
+            data-testid="user-story-image"
+            [src]="currentUser.profilePic || defaultImage"
+            alt="Your Story"
+            class="object-cover w-full h-full"
+          />
+          <div
+            class="absolute bg-blue-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs bottom-0 right-0 border border-white"
+          >
+            +
+          </div>
+        </div>
+        <span class="text-xs mt-1 text-gray-700 font-medium">Your Story</span>
+      </div>
+
+      <!-- Other Users' Stories -->
+      <div
+        *ngFor="let story of stories"
+        class="flex flex-col items-center cursor-pointer"
+        (click)="viewStory(story)"
+      >
+        <div
+          class="w-16 h-16 rounded-full border-2 border-pink-500 overflow-hidden"
+        >
+          <img
+            data-testid="story-image"
+            [src]="story.profilePic || defaultImage"
+            alt="Story"
+            class="object-cover w-full h-full"
+          />
+        </div>
+        <span class="text-xs mt-1 text-gray-700">{{
+          story.username
+        }}</span>
+      </div>
+    </div>
+
+    <div *ngIf="followingPosts.length === 0" class="text-center text-gray-500">
+      No posts available.
+    </div>
+
+    <div
+      *ngFor="let post of followingPosts"
+      class="mb-8 border-b border-gray-400 pb-6"
+    >
+      <!-- Post Header -->
+      <div class="flex items-center mb-4">
+        <img
+          [src]="post.user.profilePic ? post.user.profilePic : defaultImage"
+          alt="User profile"
+          class="w-10 h-10 rounded-full object-cover mr-3"
+        />
+        <span class="font-medium text-lg">{{ post.user.username }}</span>
+      </div>
+
+      <!-- Post Image -->
+      <div class="flex justify-center relative">
+        @if((post.content) &&
+        videoExtention.includes((post.content).split('.').pop()!.split('?')[0])){
+        <video
+          [src]="post.content"
+          class="w-full h-full object-cover px-10 bg-black"
+          autoplay
+          muted
+          loop
+          playsinline
+        ></video>
+        }@else {
+        <img [src]="post.content" alt="Post image" class="" />
+        }
+        <i data-testid="tag-icon" *ngIf="tagedPosts.includes(post.id)" (click)="onTag(post.id)" class="fa-solid fa-user absolute bottom-2 left-2 text-white text-xs bg-black bg-opacity-60 p-2 rounded-full cursor-pointer"></i>
+      </div>
+      <div class="flex items-center space-x-4 mt-2">
+        <!-- Like Button -->
+        <button
+          (click)="onLike(post)"
+          class="flex items-center cursor-pointer text-2xl space-x-1 text-red-500 hover:text-red-600"
+        >
+          @if(likeListData.includes(post.id)){
+          <i data-testid="like" class="fas fa-heart text-red-600"></i>
+          } @else {
+          <i data-testid="unlike" class="fas fa-heart text-gray-400"></i>
+          }
+        </button>
+
+        <!-- Comment Button -->
+        <button
+          (click)="onComment(post.id)"
+          class="flex items-center cursor-pointer text-2xl space-x-1 text-blue-500 hover:text-blue-600"
+        >
+          <i class="fas fa-comment"></i>
+        </button>
+        <button
+          class="flex flex-col text-2xl text-gray-700 items-center space-y-1 cursor-pointer"
+          (click)="onShare(post)"
+        >
+          <i class="fa-solid fa-square-up-right"></i>
+        </button>
+      </div>
+      <span class="text-sm cursor-pointer" (click)="showLikes(post.id)"
+        >{{ post.likes }} likes</span
+      >
+
+      <!-- Post Caption -->
+      <p class="text-sm text-gray-700">{{ post.caption }}</p>
+    </div>
+  </div>
+  <div class="w-2/5 px-32">
+    <div
+      *ngFor="let user of suggestedUsers"
+      class="flex items-center space-x-4 border-b border-gray-400 py-4 w-full"
+    >
+      <!-- User Profile Image -->
+      <img
+        [src]="user.profilePic ? user.profilePic : defaultImage"
+        alt="User profile"
+        class="w-12 h-12 rounded-full object-cover"
+      />
+
+      <!-- User Information -->
+      <div class="flex-1">
+        <h3 class="text-sm font-medium">{{ user.username }}</h3>
+      </div>
+
+      <!-- Follow Button -->
+      @if(followingUserList.includes(user.id)) {
+      <button
+        (click)="onFollow(user.id)"
+        [disabled]="true"
+        class="px-4 py-2 bg-gray-300 text-gray-700 cursor-pointer text-sm rounded-full hover:bg-gray-400 focus:outline-none"
+      >
+        Following
+      </button>
+      } @else if(followRequestsSent.has(user.id)) {
+      <button
+        [disabled]="true"
+        class="px-4 py-2 bg-gray-300 text-gray-700 cursor-pointer text-sm rounded-full hover:bg-gray-400 focus:outline-none"
+      >
+        Sent
+      </button>
+      } @else {
+      <button
+        (click)="onFollow(user.id)"
+        class="px-4 py-2 bg-blue-500 text-white cursor-pointer text-sm rounded-full hover:bg-blue-600 focus:outline-none"
+      >
+        Follow
+      </button>
+      }
+    </div>
+  </div>
+</div>
+
+<div
+  *ngIf="selectedPostIdForLikes"
+  class="fixed inset-0 bg-black flex items-center justify-center z-50"
+  (click)="selectedPostIdForLikes = null"
+>
+  <!-- Modal Content -->
+  <div
+    class="rounded-lg shadow-lg p-6 w-[400px] max-w-full relative"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Likes Component -->
+    <app-likes
+      [postId]="selectedPostIdForLikes"
+      (close)="selectedPostIdForLikes = null"
+    ></app-likes>
+  </div>
+</div>
+
+<div
+  *ngIf="selectedPostIdForComments"
+  class="fixed inset-0 bg-black flex items-center justify-center z-50"
+  (click)="selectedPostIdForComments = null"
+>
+  <!-- Modal Content -->
+  <div
+    class="rounded-lg shadow-lg p-6 w-auto max-w-full relative"
+    (click)="$event.stopPropagation()"
+  >
+    <app-comment
+      [postId]="selectedPostIdForComments"
+      (close)="selectedPostIdForComments = null"
+    ></app-comment>
+  </div>
+</div>
+
+<div
+  *ngIf="selectedPostIdForShare"
+  class="fixed inset-0 bg-black flex items-center justify-center z-50"
+  (click)="selectedPostIdForShare = null"
+>
+  <!-- Modal Content -->
+  <div
+    class="rounded-lg shadow-lg p-6 w-[900px] max-w-full relative"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Share Component -->
+    <app-share
+      [reel]="selectedPostIdForShare"
+      (close)="selectedPostIdForShare = null"
+    ></app-share>
+  </div>
+</div>
+
+<!-- Create Story Modal -->
+<div
+  *ngIf="showCreateStoryModal"
+  class="fixed inset-0 bg-black/60 flex items-center justify-center z-50"
+  (click)="showCreateStoryModal = false"
+>
+  <div
+    class="bg-white rounded-lg shadow-lg p-6 w-[80%] max-w-full"
+    (click)="$event.stopPropagation()"
+  >
+    <app-story (close)="showCreateStoryModal = false"></app-story>
+  </div>
+</div>
+
+<!-- View Story Modal -->
+<div
+  *ngIf="selectedStory"
+  class="fixed inset-0 bg-black/90 flex items-center justify-center z-50"
+  (click)="selectedStory = null"
+>
+  <div
+    class="bg-white rounded-lg shadow-lg p-4 w-[40%] max-w-full"
+    (click)="$event.stopPropagation()"
+  >
+    <app-story-list
+      [stories]="selectedStory"
+      (close)="closeStoryList()"
+    ></app-story-list>
+  </div>
+</div>
+
+<div
+  *ngIf="selectedPostIdForTag"
+  class="fixed inset-0 bg-black flex items-center justify-center z-50"
+  (click)="selectedPostIdForTag = null"
+>
+  <!-- Modal Content -->
+  <div
+    class="rounded-lg shadow-lg p-6 w-[25%] max-w-full relative"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- TagList Component -->
+    <app-tag-list
+      [postId]="selectedPostIdForTag"
+      (close)="selectedPostIdForTag = null"
+    ></app-tag-list>
+  </div>
+</div>

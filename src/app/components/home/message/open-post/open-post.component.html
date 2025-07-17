@@ -1,0 +1,151 @@
+<div class="min-h-screen flex justify-center items-center">
+  <div
+    class="max-w-full w-full bg-white text-gray-700 rounded-xl shadow-lg border border-gray-200 overflow-hidden"
+    role="dialog"
+    aria-modal="true"
+  >
+    <!-- Post Content -->
+    <article class="flex rounded-md items-end shadow-lg">
+      <!-- Left: Media -->
+      <div class="flex flex-col w-4/5 bg-black">
+        <div class="relative">
+          @if((post.content) &&
+          videoExtention.includes((post.content).split('.').pop()!.split('?')[0])){
+          <video
+            class="rounded-md object-cover py-40"
+            [src]="post.content"
+            autoplay
+            muted
+            loop
+            playsinline
+          ></video>
+          <button
+            aria-label="Mute video"
+            class="absolute top-2 right-2 bg-black bg-opacity-60 text-white text-xs p-1 rounded-full"
+          >
+            <i class="fas fa-volume-mute"></i>
+          </button>
+
+          } @else {
+          <img
+            [src]="post.content"
+            alt="Post"
+            class="rounded-md object-cover px-40 py-40"
+          />
+          }
+        </div>
+      </div>
+
+      <!-- Right: Action buttons -->
+      <div
+        class="flex flex-col w-1/5 justify-start items-center space-y-4 text-gray-400 text-sm"
+      >
+        <button
+          (click)="onLike(postData)"
+          class="cursor-pointer text-2xl hover:text-red-500 transition-colors"
+        >
+          @if(likeListData.includes(postData.id)){
+          <i class="fas fa-heart text-red-600"></i>
+          } @else {
+          <i class="fas fa-heart text-gray-700"></i>
+          }
+        </button>
+
+        <span
+          (click)="showLikes(postData.id)"
+          class="text-red-600 text-sm cursor-pointer hover:underline"
+        >
+          {{ postData.likes }}
+        </span>
+
+        <button
+          class="text-2xl hover:text-gray-800 transition"
+          (click)="onComment(postData.id)"
+        >
+          <i class="far fa-comment"></i>
+        </button>
+
+        <button
+          class="text-2xl hover:text-gray-800 transition"
+          (click)="onShare(postData)"
+        >
+          <i class="fa-solid fa-square-up-right"></i>
+        </button>
+
+        <img
+          [src]="postData.user.profilePic ? postData.user.profilePic : defaultImage"
+          alt="Profile Image"
+          class="w-8 h-8 rounded-full"
+        />
+      </div>
+    </article>
+
+    <!-- Caption & user info -->
+    <div class="border-t border-gray-100 px-4 py-3">
+      <div class="flex items-center space-x-2 mb-1">
+        <img
+          [src]="postData.user.profilePic ? postData.user.profilePic : defaultImage"
+          alt="Profile"
+          class="w-8 h-8 rounded-full"
+        />
+        <span class="font-semibold text-gray-700">{{ postData.user.username }}</span>
+      </div>
+      <p class="text-gray-700 text-sm break-words max-w-full">
+        {{ postData.caption }}
+      </p>
+    </div>
+  </div>
+</div>
+
+<div
+  *ngIf="selectedPostIdForLikes"
+  class="fixed inset-0 bg-black flex items-center justify-center z-50"
+  (click)="selectedPostIdForLikes = null"
+>
+  <!-- Modal Content -->
+  <div
+    class="rounded-lg shadow-lg p-6 w-[400px] max-w-full relative"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Likes Component -->
+    <app-likes
+      [postId]="selectedPostIdForLikes"
+      (close)="selectedPostIdForLikes = null"
+    ></app-likes>
+  </div>
+</div>
+
+<div
+  *ngIf="selectedPostIdForComments"
+  class="fixed inset-0 bg-black flex items-center justify-center z-50"
+  (click)="selectedPostIdForComments = null"
+>
+  <!-- Modal Content -->
+  <div
+    class="rounded-lg shadow-lg p-6 w-auto max-w-full relative"
+    (click)="$event.stopPropagation()"
+  >
+    <app-comment
+      [postId]="selectedPostIdForComments"
+      (close)="selectedPostIdForComments = null"
+    ></app-comment>
+  </div>
+</div>
+
+<div
+  *ngIf="selectedPostIdForShare"
+  class="fixed inset-0 bg-black flex items-center justify-center z-50"
+  (click)="selectedPostIdForShare = null"
+>
+  <!-- Modal Content -->
+  <div
+    class="rounded-lg shadow-lg p-6 w-[900px] max-w-full relative"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Likes Component -->
+    <app-share
+      [reel]="selectedPostIdForShare"
+      (close)="selectedPostIdForShare = null"
+    ></app-share>
+  </div>
+</div>
