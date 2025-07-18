@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "start:prod": "serve -s dist/instagram -l 0.0.0.0:8080",
+    "start:prod": "npm run build && serve -s dist/instagram -l tcp://0.0.0.0:$PORT",
     "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
