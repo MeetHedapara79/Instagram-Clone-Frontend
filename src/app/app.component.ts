@@ -8,5 +8,8 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'instagram';
+  title:string = 'instagram';
+  ngOnInit(): void {
+    console.log("✅ Frontend App is running successfully 🚀");
+  }
 }
