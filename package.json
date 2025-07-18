@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start:prod": "serve -s dist/instagram",
     "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
@@ -28,6 +29,7 @@
     "ngx-cookie-service": "^19.1.2",
     "postcss": "^8.5.3",
     "rxjs": "~7.8.0",
+    "serve": "^14.2.4",
     "socket.io-client": "^4.8.1",
     "tailwindcss": "^4.1.4",
     "tslib": "^2.3.0",
