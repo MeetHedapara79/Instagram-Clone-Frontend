@@ -76,14 +76,15 @@ export class ProfileComponent {
     private route: ActivatedRoute,
     private router: Router
   ) {
-    const myCookie = this._cookieService.get('authToken');
-    this.authToken = decodeToken(myCookie);
+    
     this.router.events.subscribe(() => {
       this.isTagRoute = this.router.url.includes('/tag');
     });
   }
 
   ngOnInit() {
+    const myCookie = this._cookieService.get('authToken');
+    this.authToken = decodeToken(myCookie);
     this.route.paramMap.subscribe(params => {
       const profileId = params.get('id') ?? this.authToken.id;
       this.isOwnProfile = profileId === this.authToken.id;

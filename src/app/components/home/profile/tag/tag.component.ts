@@ -26,12 +26,11 @@ export class TagComponent {
   constructor(
     private _cookieService: CookieService,
     public _profileService: ProfileService
-  ) {
-    const myCookie = this._cookieService.get('authToken');
-    this.authToken = decodeToken(myCookie);
-  }
+  ) {}
 
   ngOnInit() {
+    const myCookie = this._cookieService.get('authToken');
+    this.authToken = decodeToken(myCookie);
     this._profileService.getTagedPosts(this.authToken.id).subscribe((res)=>{
       this.tagedPosts = res.data;
     });

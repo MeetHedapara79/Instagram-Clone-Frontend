@@ -56,16 +56,14 @@ export class CreateComponent {
       location: new FormControl(''),
     });
 
-    const myCookie = this._cookieService.get('authToken');
-
-    this.authToken = decodeToken(myCookie);
-
     this.tagForm = this.fb.group({
       clickText: ['']
     });
   }
 
   ngOnInit() {
+    const myCookie = this._cookieService.get('authToken');
+    this.authToken = decodeToken(myCookie);
     document.addEventListener('click', this.handleGlobalClick);
     this.tagForm.get('clickText')?.valueChanges.pipe(debounceTime(500), takeUntil(this.destroy$)).subscribe((clickText:string)=>{
       this.tagUser(clickText);

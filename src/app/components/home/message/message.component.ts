@@ -129,7 +129,6 @@ export class MessageComponent {
   }
 
   onShow(post:NewMessageSchema):void {
-    console.log("🚀 ~ MessageComponent ~ onShow ~ post:", post)
     this.selectedPostIdForShow = post;
   }
 }

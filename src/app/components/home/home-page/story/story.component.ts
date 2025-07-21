@@ -29,11 +29,11 @@ export class StoryComponent {
         caption: new FormControl(''),
         type: new FormControl(''),
       })
+  }
 
-      const myCookie = this._cookieService.get('authToken');
-
-      this.authToken = decodeToken(myCookie);
-
+  ngOnInit(){
+    const myCookie = this._cookieService.get('authToken');
+    this.authToken = decodeToken(myCookie);
   }
 
   onDragOver(event: DragEvent): void {
