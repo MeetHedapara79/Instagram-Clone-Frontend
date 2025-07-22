@@ -3,7 +3,6 @@ import { NewMessageSchema } from '../message.types';
 import { HomeService } from '../../home.service';
 import { User } from '../../navbar/navbar.types';
 import { DecodedToken, decodeToken } from '../../../../utils/jwtdecode';
-import { CookieService } from 'ngx-cookie-service';
 import { FollowingPostsSchema } from '../../home-page/home-page.types';
 import { CommentComponent } from '../../home-page/comment/comment.component';
 import { ShareComponent } from '../../reels/share/share.component';
@@ -51,11 +50,10 @@ export class OpenPostComponent {
   constructor(
     public _homePageService: HomePageService,
     public _homeService: HomeService,
-    public _cookieService: CookieService,
     public _createService: CreateService
   ) {
-    const myCookie = this._cookieService.get('authToken');
-    this.authToken = decodeToken(myCookie);
+    const token = localStorage.getItem('authToken');
+    this.authToken = decodeToken(token);
   }
   
   ngOnInit(): void {

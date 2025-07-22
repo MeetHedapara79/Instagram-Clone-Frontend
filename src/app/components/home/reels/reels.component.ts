@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { HomePageService } from '../home-page/home-page.service';
-import { CookieService } from 'ngx-cookie-service';
 import { DecodedToken, decodeToken } from '../../../utils/jwtdecode';
 import { FollowingPostsSchema, FollowUserSchema } from '../home-page/home-page.types';
 import { CommonModule } from '@angular/common';
@@ -28,9 +27,9 @@ export class ReelsComponent {
   followingPosts: FollowingPostsSchema[] = [];
   postIdArray:string[] = [];
 
-  constructor(public _homePageService:HomePageService, public _cookieService: CookieService, public _commentService:CommentService){
-    const myCookie = this._cookieService.get('authToken');
-    this.authToken = decodeToken(myCookie);
+  constructor(public _homePageService:HomePageService, public _commentService:CommentService){
+    const token = localStorage.getItem('authToken');
+    this.authToken = decodeToken(token);
   }
 
   ngOnInit(){

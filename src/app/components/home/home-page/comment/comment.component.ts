@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 import { CommentService } from './comment.service';
 import { DecodedToken, decodeToken } from '../../../../utils/jwtdecode';
-import { CookieService } from 'ngx-cookie-service';
 import { CommentSchema } from './comment.types';
 import { HomeService } from '../../home.service';
 import { User } from '../../navbar/navbar.types';
@@ -77,14 +76,12 @@ export class CommentComponent {
 
   constructor(
     public _commentService: CommentService,
-    public _cookieService: CookieService,
     public _homeService: HomeService,
     public _createService: CreateService,
     public _homePageService: HomePageService
   ) {
-    const myCookie = this._cookieService.get('authToken');
-    this.authToken = decodeToken(myCookie);
-
+    const token = localStorage.getItem('authToken');
+    this.authToken = decodeToken(token);
     this.commentForm = new FormGroup({
       content: new FormControl('', [
         Validators.required,

@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../auth.service';
-import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-signin',
@@ -16,7 +15,7 @@ export class SigninComponent implements OnInit {
   passwordVisible: boolean = false; 
   errorMessage: string = '';
 
-  constructor(public _authService: AuthService, private router: Router, private _cookieService: CookieService) {
+  constructor(public _authService: AuthService, private router: Router) {
     this.signinForm = new FormGroup({
       username: new FormControl('', [
         Validators.required,
@@ -29,8 +28,7 @@ export class SigninComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this._cookieService.delete('authToken');
-
+    localStorage.removeItem('authToken');
   }
 
    togglePasswordVisibility(): void {
@@ -49,7 +47,8 @@ export class SigninComponent implements OnInit {
       return;
     }
     this._authService.signinUser(this.signinForm.value).subscribe(
-      (response) => {
+      (response:any) => {
+        localStorage.setItem('authToken', response.authToken);
         this.router.navigate(['/home/homePage']);
       },
       (error) => {

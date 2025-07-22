@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { NotificationService } from './notification.service';
-import { CookieService } from 'ngx-cookie-service';
 import { DecodedToken, decodeToken } from '../../../utils/jwtdecode';
 import { FollowUserSchema } from '../home-page/home-page.types';
 import { CommonModule } from '@angular/common';
@@ -18,10 +17,9 @@ export class NotificationComponent {
 
   constructor(
     public _notificationService: NotificationService,
-    public _cookieService: CookieService
   ) {
-    const myCookie = this._cookieService.get('authToken');
-    this.authToken = decodeToken(myCookie);
+    const token = localStorage.getItem('authToken');
+    this.authToken = decodeToken(token);
   }
 
   ngOnInit(): void {

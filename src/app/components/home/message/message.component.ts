@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { CookieService } from 'ngx-cookie-service';
 import { DecodedToken, decodeToken } from '../../../utils/jwtdecode';
 import { ProfileService } from '../profile/profile.service';
 import { CommonModule } from '@angular/common';
@@ -41,12 +40,11 @@ export class MessageComponent {
 
 
   constructor(
-    public _cookieService: CookieService,
     public _profileService: ProfileService,
     public _messageService: MessageService
   ) {
-    const myCookie = this._cookieService.get('authToken');
-    this.authToken = decodeToken(myCookie);
+    const token = localStorage.getItem('authToken');
+    this.authToken = decodeToken(token);
 
     this.messageForm = new FormGroup({
       content: new FormControl('', [

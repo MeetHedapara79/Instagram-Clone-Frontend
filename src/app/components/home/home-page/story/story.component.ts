@@ -1,6 +1,5 @@
 import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
 import { StoryService } from './story.service';
-import { CookieService } from 'ngx-cookie-service';
 import { DecodedToken, decodeToken } from '../../../../utils/jwtdecode';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -24,7 +23,7 @@ export class StoryComponent {
   @Output() close = new EventEmitter<void>();
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
-  constructor(private _cookieService: CookieService, private _storyService: StoryService) {
+  constructor(private _storyService: StoryService) {
       this.postForm = new FormGroup({
         caption: new FormControl(''),
         type: new FormControl(''),
@@ -32,8 +31,8 @@ export class StoryComponent {
   }
 
   ngOnInit(){
-    const myCookie = this._cookieService.get('authToken');
-    this.authToken = decodeToken(myCookie);
+    const token = localStorage.getItem('authToken');
+    this.authToken = decodeToken(token);
   }
 
   onDragOver(event: DragEvent): void {

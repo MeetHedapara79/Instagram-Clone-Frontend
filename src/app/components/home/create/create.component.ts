@@ -44,7 +44,6 @@ export class CreateComponent {
   tagForm: FormGroup;
   private destroy$ = new Subject<void>();
   constructor(
-    private _cookieService: CookieService,
     public _createService: CreateService,
     private router: Router,
     private zone: NgZone,
@@ -62,8 +61,8 @@ export class CreateComponent {
   }
 
   ngOnInit() {
-    const myCookie = this._cookieService.get('authToken');
-    this.authToken = decodeToken(myCookie);
+    const token = localStorage.getItem('authToken');
+    this.authToken = decodeToken(token);
     document.addEventListener('click', this.handleGlobalClick);
     this.tagForm.get('clickText')?.valueChanges.pipe(debounceTime(500), takeUntil(this.destroy$)).subscribe((clickText:string)=>{
       this.tagUser(clickText);

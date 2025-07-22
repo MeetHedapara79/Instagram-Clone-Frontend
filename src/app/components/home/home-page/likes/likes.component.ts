@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { HomePageService } from '../home-page.service';
-import { CookieService } from 'ngx-cookie-service';
 import { ProfileService } from '../../profile/profile.service';
 import { DecodedToken, decodeToken } from '../../../../utils/jwtdecode';
 import { FollowUserSchema } from '../home-page.types';
@@ -25,12 +24,11 @@ export class LikesComponent {
 
   constructor(
     public _homePageService: HomePageService,
-    public _cookieService: CookieService,
     public _profileService: ProfileService,
     public _likesService: LikesService
   ) {
-    const myCookie = this._cookieService.get('authToken');
-    this.authToken = decodeToken(myCookie);
+    const token = localStorage.getItem('authToken');
+    this.authToken = decodeToken(token);
 
 
   }

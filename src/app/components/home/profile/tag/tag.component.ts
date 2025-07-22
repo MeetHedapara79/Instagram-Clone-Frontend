@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { ProfileService } from '../profile.service';
 import { TagedPostList } from '../profile.types';
-import { CookieService } from 'ngx-cookie-service';
 import { DecodedToken, decodeToken } from '../../../../utils/jwtdecode';
 import { CommonModule } from '@angular/common';
 
@@ -24,13 +23,12 @@ export class TagComponent {
   ];
 
   constructor(
-    private _cookieService: CookieService,
     public _profileService: ProfileService
   ) {}
 
   ngOnInit() {
-    const myCookie = this._cookieService.get('authToken');
-    this.authToken = decodeToken(myCookie);
+    const token = localStorage.getItem('authToken');
+    this.authToken = decodeToken(token);
     this._profileService.getTagedPosts(this.authToken.id).subscribe((res)=>{
       this.tagedPosts = res.data;
     });

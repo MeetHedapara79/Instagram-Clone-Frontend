@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { HomePageService } from './home-page.service';
 import { User } from '../navbar/navbar.types';
-import { CookieService } from 'ngx-cookie-service';
 import { DecodedToken, decodeToken } from '../../../utils/jwtdecode';
 import {
   FollowingPostsSchema,
@@ -72,14 +71,13 @@ export class HomePageComponent {
 
   constructor(
     public _homePageService: HomePageService,
-    public _cookieService: CookieService,
     public _profileService: ProfileService,
     public _messageService: MessageService,
     public _homeService: HomeService,
     public _storyService: StoryService
   ) {
-    const myCookie = this._cookieService.get('authToken');
-    this.authToken = decodeToken(myCookie);
+    const token = localStorage.getItem('authToken');    
+    this.authToken = decodeToken(token);
     this.currentUser.id = this.authToken.id;
     this.currentUser.username = this.authToken.username;
   }

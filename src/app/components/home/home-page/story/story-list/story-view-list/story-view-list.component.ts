@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { StoryService } from '../../story.service';
 import { CommonModule } from '@angular/common';
-import { CookieService } from 'ngx-cookie-service';
 import { DecodedToken, decodeToken } from '../../../../../../utils/jwtdecode';
 import { HomePageService } from '../../../home-page.service';
 import { ProfileService } from '../../../../profile/profile.service';
@@ -27,11 +26,10 @@ export class StoryViewListComponent {
   constructor(
     public _homePageService: HomePageService,
     public _storyService: StoryService,
-    public _cookieService: CookieService,
     public _profileService: ProfileService
   ) {
-    const myCookie = this._cookieService.get('authToken');
-    this.authToken = decodeToken(myCookie);
+    const token = localStorage.getItem('authToken');
+    this.authToken = decodeToken(token);
   }
 
   ngOnInit() {

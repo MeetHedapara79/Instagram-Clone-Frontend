@@ -3,7 +3,6 @@ import { environment } from '../../../../environments/environment';
 import { io, Socket } from 'socket.io-client';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { CookieService } from 'ngx-cookie-service';
 import { DecodedToken, decodeToken } from '../../../utils/jwtdecode';
 import { NewMessageSchema } from './message.types';
 import { FollowingPostsSchema } from '../home-page/home-page.types';
@@ -18,14 +17,14 @@ export class MessageService {
   socketUrl = environment.socketUrl;
   authToken: DecodedToken = { username: '', id: '', email: '' };
 
-  constructor(private http: HttpClient, public _cookieService: CookieService) {}
+  constructor(private http: HttpClient) {}
 
   connectSocket() {
     this.socket = io(this.socketUrl, { transports: ['websocket'] });
     this.socket?.on('connect', () => {
       console.log('Socket connected');
-      const myCookie = this._cookieService.get('authToken');
-      this.authToken = decodeToken(myCookie);
+      const token = localStorage.getItem('authToken');
+      this.authToken = decodeToken(token);
 
       // Register the userId with the server
       this.socket.emit('register_user', this.authToken.id);

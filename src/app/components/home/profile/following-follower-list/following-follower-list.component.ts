@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ProfileService } from '../profile.service';
 import { DecodedToken, decodeToken } from '../../../../utils/jwtdecode';
-import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-following-follower-list',
@@ -36,10 +35,9 @@ export class FollowingFollowerListComponent {
 
   constructor(
     public _profileService: ProfileService,
-    public _cookieService: CookieService
   ) {
-    const myCookie = this._cookieService.get('authToken');
-    this.authToken = decodeToken(myCookie);
+    const token = localStorage.getItem('authToken');
+    this.authToken = decodeToken(token);
   }
 
   ngOnInit() {

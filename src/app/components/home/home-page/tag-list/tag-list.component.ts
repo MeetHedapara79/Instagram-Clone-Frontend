@@ -5,7 +5,6 @@ import {
   GetTagedPostsByPostIdSchema,
 } from '../home-page.types';
 import { CommonModule } from '@angular/common';
-import { CookieService } from 'ngx-cookie-service';
 import { DecodedToken, decodeToken } from '../../../../utils/jwtdecode';
 import { ProfileService } from '../../profile/profile.service';
 
@@ -26,12 +25,11 @@ export class TagListComponent {
     'https://storage.googleapis.com/a1aa/image/07245c34-77f4-4942-6bcd-50f96fa1bc49.jpg';
 
   constructor(
-    public _cookieService: CookieService,
     public _profileService: ProfileService,
     public _homePageService: HomePageService
   ) {
-    const myCookie = this._cookieService.get('authToken');
-    this.authToken = decodeToken(myCookie);
+    const token = localStorage.getItem('authToken');
+    this.authToken = decodeToken(token);
   }
 
   ngOnInit() {

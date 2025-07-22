@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { StoryService } from '../story.service';
-import { CookieService } from 'ngx-cookie-service';
 import { DecodedToken, decodeToken } from '../../../../../utils/jwtdecode';
 import { CommonModule } from '@angular/common';
 import { StoryViewListComponent } from './story-view-list/story-view-list.component';
@@ -42,10 +41,9 @@ export class StoryListComponent {
 
   constructor(
     private _storyService: StoryService,
-    public _cookieService: CookieService
   ) {
-    const myCookie = this._cookieService.get('authToken');
-    this.authToken = decodeToken(myCookie);
+    const token = localStorage.getItem('authToken');
+    this.authToken = decodeToken(token);
     this.userId = this.authToken.id;
   }
 

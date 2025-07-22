@@ -3,7 +3,6 @@ import { FollowingPostsSchema } from '../../home-page/home-page.types';
 import { ProfileService } from '../../profile/profile.service';
 import { CommonModule } from '@angular/common';
 import { MessageService } from '../../message/message.service';
-import { CookieService } from 'ngx-cookie-service';
 import { DecodedToken, decodeToken } from '../../../../utils/jwtdecode';
 
 @Component({
@@ -19,9 +18,9 @@ export class ShareComponent {
   followingUserList:{ id: string; username: string; profilePic: string | null; }[] = [];
   defaultImage: string = 'https://storage.googleapis.com/a1aa/image/07245c34-77f4-4942-6bcd-50f96fa1bc49.jpg';
 
-  constructor(public _profileService:ProfileService, public _messageService:MessageService, public _cookieService: CookieService){
-    const myCookie = this._cookieService.get('authToken');
-    this.authToken = decodeToken(myCookie);
+  constructor(public _profileService:ProfileService, public _messageService:MessageService){
+    const token = localStorage.getItem('authToken');
+    this.authToken = decodeToken(token);
   }
 
   ngOnInit(): void {

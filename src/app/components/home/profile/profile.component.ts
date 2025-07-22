@@ -68,7 +68,6 @@ export class ProfileComponent {
   @ViewChild('fileInput') fileInput: ElementRef | undefined;
 
   constructor(
-    private _cookieService: CookieService,
     public _createService: CreateService,
     public _profileService: ProfileService,
     public _homeService: HomeService,
@@ -83,8 +82,8 @@ export class ProfileComponent {
   }
 
   ngOnInit() {
-    const myCookie = this._cookieService.get('authToken');
-    this.authToken = decodeToken(myCookie);
+    const token = localStorage.getItem('authToken');
+    this.authToken = decodeToken(token);
     this.route.paramMap.subscribe(params => {
       const profileId = params.get('id') ?? this.authToken.id;
       this.isOwnProfile = profileId === this.authToken.id;
