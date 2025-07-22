@@ -80,8 +80,10 @@
           
         </div>
         <span
-          (click)="showLikes(postData.id)"
-          class="text-sm text-gray-700 cursor-pointer font-semibold"
+          (click)="postData.likes > 0 && showLikes(postData.id)"
+          [class.cursor-pointer]="postData.likes > 0"
+          [class.cursor-default]="postData.likes === 0"
+          class="text-sm text-gray-700 font-semibold"
           >{{ postData.likes }} likes</span
         >
         <form

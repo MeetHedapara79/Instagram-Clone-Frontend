@@ -1,3 +1,6 @@
+<div *ngIf="tagedPosts.length === 0" class="text-center font-bold text-3xl text-gray-500">
+  No One Tag You Till Now.
+</div>
 <section class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
   <div
     *ngFor="let post of tagedPosts"

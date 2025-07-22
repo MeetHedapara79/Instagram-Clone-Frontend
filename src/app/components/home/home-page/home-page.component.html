@@ -5,27 +5,22 @@
       class="flex overflow-x-auto space-x-4 py-4 px-6 border-b border-gray-300 bg-white"
     >
       <!-- Create Story (User's Own) -->
+      <!-- <div
+      class="absolute bg-blue-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs border border-white"
+    >
+      +
+    </div> -->
       <div
         class="flex flex-col items-center cursor-pointer"
         (click)="openCreateStoryModal()"
         data-testid="create-story"
       >
         <div
-          class="w-16 h-16 rounded-full border-2 border-blue-500 flex items-center justify-center overflow-hidden"
+          class="w-16 h-16 rounded-full border-2 border-blue-500 bg-blue-500 text-white flex items-center justify-center overflow-hidden"
         >
-          <img
-            data-testid="user-story-image"
-            [src]="currentUser.profilePic || defaultImage"
-            alt="Your Story"
-            class="object-cover w-full h-full"
-          />
-          <div
-            class="absolute bg-blue-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs bottom-0 right-0 border border-white"
-          >
-            +
-          </div>
+          +
         </div>
-        <span class="text-xs mt-1 text-gray-700 font-medium">Your Story</span>
+        <span class="text-xs mt-1 text-gray-700 font-medium">Add Story</span>
       </div>
 
       <!-- Other Users' Stories -->
@@ -44,13 +39,13 @@
             class="object-cover w-full h-full"
           />
         </div>
-        <span class="text-xs mt-1 text-gray-700">{{
-          story.username
+        <span class="text-xs mt-1 text-gray-700 font-medium">{{
+          authToken.username == story.username ? 'Your Story' : story.username
         }}</span>
       </div>
     </div>
 
-    <div *ngIf="followingPosts.length === 0" class="text-center text-gray-500">
+    <div *ngIf="followingPosts.length === 0" class="text-center font-bold text-2xl text-gray-500">
       No posts available.
     </div>
 
@@ -112,7 +107,8 @@
           <i class="fa-solid fa-square-up-right"></i>
         </button>
       </div>
-      <span class="text-sm cursor-pointer" (click)="showLikes(post.id)"
+      <span class="text-sm" [class.cursor-pointer]="post.likes > 0"
+        [class.cursor-default]="post.likes === 0"  (click)="post.likes > 0 && showLikes(post.id)"
         >{{ post.likes }} likes</span
       >
 

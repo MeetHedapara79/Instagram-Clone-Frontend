@@ -26,7 +26,7 @@ export class StoryComponent {
   constructor(private _storyService: StoryService) {
       this.postForm = new FormGroup({
         caption: new FormControl(''),
-        type: new FormControl(''),
+        type: new FormControl('', [Validators.required]),
       })
   }
 

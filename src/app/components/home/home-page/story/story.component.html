@@ -85,6 +85,7 @@
                 Cancel
               </button>
               <button
+                [disabled]="showSidePanel && postForm.invalid"
                 [attr.data-testid]="showSidePanel ? 'share-story-model' : 'next-story-model'"
                 class="bg-blue-500 hover:bg-blue-600 text-white cursor-pointer font-semibold py-2 px-4 rounded"
                 (click)="showSidePanel ? onSubmit() : next()"
@@ -132,6 +133,9 @@
                 <option value="IMAGE">Image</option>
                 <option value="VIDEO">Video</option>
               </select>
+              @if(postForm.get('type')?.hasError('required')){
+                <div class="text-red-500 text-xs mt-1">Select appropriate type</div>
+              }
             </div>
           </form>
         </div>

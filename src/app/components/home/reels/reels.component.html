@@ -1,5 +1,5 @@
 <div class="flex justify-center">
-  <h1 class="text-2xl font-semibold mb-6" *ngIf="reels.length == 0">
+  <h1 class="text-center font-bold text-2xl text-gray-500" *ngIf="reels.length == 0">
     Reels are not available right now
   </h1>
   <div class="flex flex-col space-y-6">
@@ -52,7 +52,9 @@
           }
         </button>
         <span
-          (click)="showLikes(reel.id)"
+          (click)="reel.likes > 0 && showLikes(reel.id)"
+          [class.cursor-pointer]="reel.likes > 0"
+          [class.cursor-default]="reel.likes === 0"
           class="mt-0 text-red-600 text-sm cursor-pointer"
         >
           {{ reel.likes }}
