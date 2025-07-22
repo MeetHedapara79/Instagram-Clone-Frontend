@@ -37,7 +37,7 @@ export class StoryListComponent {
   progressBar = 0;
   progressTimer: any;
   progressInterval = 100; // in ms
-  storyDuration = 7000; // matches auto-slide interval (7 seconds)
+  storyDuration = 5000; // matches auto-slide interval (7 seconds)
 
   constructor(
     private _storyService: StoryService,

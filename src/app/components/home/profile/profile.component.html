@@ -79,6 +79,7 @@
       </li>
      
       <li
+        *ngIf="isOwnProfile"
         class="flex items-center cursor-pointer hover:text-black text-xl"
         [routerLink]="['/home/profile/tag']"
       >
