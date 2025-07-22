@@ -20,7 +20,7 @@
             'w-2/3': showSidePanel,
             'w-[500px]': !showSidePanel,
             'h-full': showSidePanel,
-            'h-[500px]': !showSidePanel
+            'min-h-[500px]': !showSidePanel
           }"
           class="flex flex-col items-center justify-center"
         >
@@ -134,7 +134,7 @@
                 <option value="VIDEO">Video</option>
               </select>
               @if(postForm.get('type')?.hasError('required')){
-                <div class="text-red-500 text-xs mt-1">Select appropriate type</div>
+                <div class="text-red-700 text-xs mt-1 font-bold">Select appropriate type</div>
               }
             </div>
           </form>
