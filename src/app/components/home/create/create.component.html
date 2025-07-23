@@ -63,20 +63,20 @@
 
           <ng-template #previewBlock>
             <div class="relative w-full flex justify-center">
-              <div class="relative" (click)="onMediaClick($event)">
+              <div class="relative w-[500px] h-[590px] flex items-center justify-center overflow-hidden bg-black rounded" (click)="onMediaClick($event)">
                 <img
                   data-testid="media-preview"
                   *ngIf="isImage"
                   [src]="previewUrl"
                   #mediaElement
-                  class="max-w-full rounded"
+                  class="object-contain w-full h-full"
                 />
                 <video
                   *ngIf="isVideo"
                   [src]="previewUrl"
                   #mediaElement
                   controls
-                  class="max-w-full rounded"
+                  class="object-contain w-full h-full"
                 ></video>
                 <form [formGroup]="tagForm">
                   <div
@@ -114,6 +114,7 @@
 
             <div class="flex justify-between w-full mt-2">
               <button
+                
                 class="bg-gray-400 cursor-pointer hover:bg-gray-500 text-gray-800 font-semibold py-2 px-4 rounded"
                 (click)="cancel()"
               >
